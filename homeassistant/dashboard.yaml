@@ -1,0 +1,188 @@
+# Home Assistant dashboard view for the ISDT 608PD entities (sensor.isdt_charger_*).
+# Dashboard > Edit > + (add view) > three dots > Edit in YAML, and paste this.
+# Needs the Mushroom cards (HACS) for the status card; everything else is built in.
+type: sections
+title: Charger
+path: charger
+icon: mdi:battery-charging-high
+max_columns: 4
+sections:
+- type: grid
+  cards:
+  - type: heading
+    heading: ISDT 608PD
+    icon: mdi:car-battery
+    badges:
+    - type: entity
+      entity: binary_sensor.isdt_charger_connected
+      show_state: true
+      show_icon: true
+      color: green
+  - type: custom:mushroom-template-card
+    primary: '{{ states(''sensor.isdt_charger_status'') if states(''sensor.isdt_charger_status'') not in [''unavailable'',''unknown'']
+      else ''Monitor offline'' }}'
+    secondary: '{% set s = states(''sensor.isdt_charger_status'') %}{% if s in [''unavailable'',''unknown''] %}Start isdt_gui.py
+      on the laptop{% else %}{{ state_attr(''sensor.isdt_charger_status'',''pack'') }}{% if state_attr(''sensor.isdt_charger_status'',''phase'')
+      %} · {{ state_attr(''sensor.isdt_charger_status'',''phase'') }}{% endif %}{% endif %}'
+    icon: '{{ state_attr(''sensor.isdt_charger_status'',''icon'') or ''mdi:battery-off'' }}'
+    icon_color: '{% set c = state_attr(''sensor.isdt_charger_status'',''status_code'') %}{{ {1: ''blue'', 2: ''green'', 3:
+      ''amber'', 4: ''amber''}.get(c, ''grey'') }}'
+    tap_action:
+      action: more-info
+      entity: sensor.isdt_charger_battery
+    grid_options:
+      columns: 12
+  - type: gauge
+    entity: sensor.isdt_charger_battery
+    name: Charge
+    min: 0
+    max: 100
+    needle: false
+    severity:
+      green: 90
+      yellow: 40
+      red: 0
+    grid_options:
+      columns: 12
+      rows: 3
+  - type: tile
+    entity: sensor.isdt_charger_time_left
+    name: Time left
+  - type: tile
+    entity: sensor.isdt_charger_done_at
+    name: Done at
+    state_content:
+    - state
+- type: grid
+  cards:
+  - type: heading
+    heading: Live
+    icon: mdi:flash
+  - type: tile
+    entity: sensor.isdt_charger_pack_voltage
+    name: Pack
+  - type: tile
+    entity: sensor.isdt_charger_current
+    name: Current
+  - type: tile
+    entity: sensor.isdt_charger_power
+    name: Power
+  - type: tile
+    entity: sensor.isdt_charger_added
+    name: Added
+  - type: tile
+    entity: sensor.isdt_charger_elapsed
+    name: Elapsed
+  - type: tile
+    entity: sensor.isdt_charger_input_voltage
+    name: Input
+- type: grid
+  cards:
+  - type: heading
+    heading: Cells
+    icon: mdi:battery-outline
+  - type: tile
+    entity: sensor.isdt_charger_cell_1
+    name: Cell 1
+    icon: mdi:battery-high
+    state_content:
+    - state
+    - ir_mohm
+    visibility:
+    - condition: state
+      entity: sensor.isdt_charger_cell_1
+      state_not: unavailable
+  - type: tile
+    entity: sensor.isdt_charger_cell_2
+    name: Cell 2
+    icon: mdi:battery-high
+    state_content:
+    - state
+    - ir_mohm
+    visibility:
+    - condition: state
+      entity: sensor.isdt_charger_cell_2
+      state_not: unavailable
+  - type: tile
+    entity: sensor.isdt_charger_cell_3
+    name: Cell 3
+    icon: mdi:battery-high
+    state_content:
+    - state
+    - ir_mohm
+    visibility:
+    - condition: state
+      entity: sensor.isdt_charger_cell_3
+      state_not: unavailable
+  - type: tile
+    entity: sensor.isdt_charger_cell_4
+    name: Cell 4
+    icon: mdi:battery-high
+    state_content:
+    - state
+    - ir_mohm
+    visibility:
+    - condition: state
+      entity: sensor.isdt_charger_cell_4
+      state_not: unavailable
+  - type: tile
+    entity: sensor.isdt_charger_cell_5
+    name: Cell 5
+    icon: mdi:battery-high
+    state_content:
+    - state
+    - ir_mohm
+    visibility:
+    - condition: state
+      entity: sensor.isdt_charger_cell_5
+      state_not: unavailable
+  - type: tile
+    entity: sensor.isdt_charger_cell_6
+    name: Cell 6
+    icon: mdi:battery-high
+    state_content:
+    - state
+    - ir_mohm
+    visibility:
+    - condition: state
+      entity: sensor.isdt_charger_cell_6
+      state_not: unavailable
+- type: grid
+  cards:
+  - type: heading
+    heading: History
+    icon: mdi:chart-line
+  - type: history-graph
+    title: Charge
+    hours_to_show: 3
+    entities:
+    - entity: sensor.isdt_charger_battery
+      name: Charge
+    grid_options:
+      columns: 12
+  - type: history-graph
+    title: Current
+    hours_to_show: 3
+    entities:
+    - entity: sensor.isdt_charger_current
+      name: Current
+    grid_options:
+      columns: 12
+  - type: history-graph
+    title: Cells
+    hours_to_show: 3
+    entities:
+    - entity: sensor.isdt_charger_cell_1
+      name: Cell 1
+    - entity: sensor.isdt_charger_cell_2
+      name: Cell 2
+    - entity: sensor.isdt_charger_cell_3
+      name: Cell 3
+    - entity: sensor.isdt_charger_cell_4
+      name: Cell 4
+    - entity: sensor.isdt_charger_cell_5
+      name: Cell 5
+    - entity: sensor.isdt_charger_cell_6
+      name: Cell 6
+    grid_options:
+      columns: 12

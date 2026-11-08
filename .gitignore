@@ -1,0 +1,32 @@
+# Allowlist: ignore everything, then un-ignore only files that are safe to publish.
+# Anything new stays private until it is added here on purpose.
+*
+!.gitignore
+!README.md
+!LICENSE
+!requirements.txt
+!isdt.py
+!estimator.py
+!notify.py
+!ha_live.py
+!isdt_gui.py
+!isdt_monitor.py
+
+!homeassistant/
+!homeassistant/dashboard.yaml
+
+!esp32/
+!esp32/README.md
+!esp32/isdt_charger/
+!esp32/isdt_charger/isdt_charger.ino
+!esp32/isdt_charger/charger.h
+!esp32/isdt_charger/estimator.h
+!esp32/isdt_charger/ha_client.h
+!esp32/isdt_charger/net.h
+!esp32/isdt_charger/ca_certs.h
+!esp32/isdt_charger/secrets.example.h
+
+# Never publish, even if someone edits the list above:
+# esp32/isdt_charger/secrets.h  (Home Assistant token, Wi-Fi passwords)
+# esp32/build/                  (firmware with the secrets compiled in)
+# app_id.txt, *_config.json, estimator_history.json  (personal / machine-specific)
